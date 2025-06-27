@@ -7,47 +7,30 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { useChatStore } from "@/lib/store";
 import { useEffect, useRef } from "react";
-import { ScrollArea } from "../ui/scroll-area";
 import { ChatMessage } from "./chat-message";
 import { ChatOptions } from "./chat-options";
 
 export function Chat() {
-  const goToNextStep = (step?: any) => {};
-
-  const messages = [
-    {
-      id: "1",
-      sender: "bot",
-      text: "Olá! Como posso ajudar você hoje?",
-      options: [
-        "Falar sobre produtos",
-        "Suporte técnico",
-        "Falar com um atendente",
-      ],
-    },
-  ];
-
+  const { messages, currentBotMessage, processUserResponse, startChat } =
+    useChatStore();
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (messages.length === 0) {
-      goToNextStep();
+    if (messages.length === 0 && !currentBotMessage) {
+      startChat();
     }
-  }, [messages.length, goToNextStep]);
+  }, [messages.length, currentBotMessage, startChat]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
   const handleOptionSelect = (option: string) => {
-    goToNextStep(option);
+    processUserResponse(option);
   };
-
-  const currentBotMessage =
-    messages.length > 0 && messages[messages.length - 1].sender === "bot"
-      ? messages[messages.length - 1]
-      : null;
 
   const showOptions =
     currentBotMessage &&

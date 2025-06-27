@@ -6,7 +6,6 @@ export type ChatMessageProps = {
     id: string;
     text: string;
     sender: string;
-    options: string[]; // Opcional, se a mensagem for do bot
   };
 };
 
