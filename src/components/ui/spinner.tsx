@@ -250,23 +250,21 @@ export type SpinnerProps = LucideProps & {
     | "infinite";
 };
 
-export const Spinner = ({ variant, ...props }: SpinnerProps) => {
-  switch (variant) {
-    case "circle":
-      return <Circle {...props} />;
-    case "pinwheel":
-      return <Pinwheel {...props} />;
-    case "circle-filled":
-      return <CircleFilled {...props} />;
-    case "ellipsis":
-      return <Ellipsis {...props} />;
-    case "ring":
-      return <Ring {...props} />;
-    case "bars":
-      return <Bars {...props} />;
-    case "infinite":
-      return <Infinite {...props} />;
-    default:
-      return <Default {...props} />;
-  }
+const variantMap: Record<
+  NonNullable<SpinnerProps["variant"]>,
+  React.FC<SpinnerVariantProps>
+> = {
+  default: Default,
+  circle: Circle,
+  pinwheel: Pinwheel,
+  "circle-filled": CircleFilled,
+  ellipsis: Ellipsis,
+  ring: Ring,
+  bars: Bars,
+  infinite: Infinite,
+};
+
+export const Spinner = ({ variant = "default", ...props }: SpinnerProps) => {
+  const Component = variantMap[variant] ?? Default;
+  return <Component {...props} />;
 };

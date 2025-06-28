@@ -1,9 +1,10 @@
 import { conversationMocks } from "@/lib/mocks";
 import { create } from "zustand";
+
 interface Message {
   id: string;
   text: string;
-  sender: 'user' | 'bot';
+  sender: "user" | "bot";
 }
 
 interface BotMessageWithId extends Message {
@@ -31,29 +32,39 @@ export const useChatStore = create<ChatState>((set, get) => ({
   currentBotMessage: null,
   isBotTyping: false,
 
-  addMessage: (message) => set((state) => ({
-    messages: [...state.messages, message],
-  })),
+  addMessage: (message) =>
+    set((state) => ({
+      messages: [...state.messages, message],
+    })),
 
   setBotTyping: (isTyping) => set({ isBotTyping: isTyping }),
 
   startChat: () => {
-    const firstStep = conversationMocks[0];
+    const [firstStep] = conversationMocks;
     if (firstStep) {
       get().setBotTyping(true);
       setTimeout(() => {
-        get().addMessage({ id: Date.now().toString() + '-bot', text: firstStep.message, sender: 'bot' });
+        const timestamp = Date.now().toString();
+        const id = `${timestamp}-bot`;
+
+        get().addMessage({
+          id,
+          text: firstStep.message,
+          sender: "bot",
+        });
+
         set({
           currentBotMessage: {
-            id: Date.now().toString() + '-bot',
+            id,
             text: firstStep.message,
-            sender: 'bot',
+            sender: "bot",
             options: firstStep.options,
             followUp: firstStep.followUp,
             originalMockIndex: 0,
             isFollowUp: false,
           },
         });
+
         get().setBotTyping(false);
       }, 1500);
     }
@@ -64,26 +75,30 @@ export const useChatStore = create<ChatState>((set, get) => ({
 
     if (!currentBotMessage) return;
 
-    addMessage({ id: Date.now().toString() + '-user', text: userResponse, sender: 'user' });
+    const userId = `${Date.now().toString()}-user`;
+    addMessage({
+      id: userId,
+      text: userResponse,
+      sender: "user",
+    });
 
-    set((state) => ({
-      currentBotMessage: null,
-    }));
+    set({ currentBotMessage: null });
 
     setBotTyping(true);
 
     setTimeout(() => {
       if (currentBotMessage.followUp && !currentBotMessage.isFollowUp) {
+        const followUpId = `${Date.now().toString()}-bot-followup`;
         addMessage({
-          id: Date.now().toString() + '-bot-followup',
+          id: followUpId,
           text: currentBotMessage.followUp.message,
-          sender: 'bot',
+          sender: "bot",
         });
         set({
           currentBotMessage: {
-            id: Date.now().toString() + '-bot-followup',
+            id: followUpId,
             text: currentBotMessage.followUp.message,
-            sender: 'bot',
+            sender: "bot",
             options: currentBotMessage.followUp.options,
             originalMockIndex: currentBotMessage.originalMockIndex,
             isFollowUp: true,
@@ -94,12 +109,17 @@ export const useChatStore = create<ChatState>((set, get) => ({
         const nextStep = conversationMocks[nextStepIndex];
 
         if (nextStep) {
-          addMessage({ id: Date.now().toString() + '-bot', text: nextStep.message, sender: 'bot' });
+          const nextId = `${Date.now().toString()}-bot`;
+          addMessage({
+            id: nextId,
+            text: nextStep.message,
+            sender: "bot",
+          });
           set({
             currentBotMessage: {
-              id: Date.now().toString() + '-bot',
+              id: nextId,
               text: nextStep.message,
-              sender: 'bot',
+              sender: "bot",
               options: nextStep.options,
               followUp: nextStep.followUp,
               originalMockIndex: nextStepIndex,
@@ -107,9 +127,16 @@ export const useChatStore = create<ChatState>((set, get) => ({
             },
           });
         } else {
-          const resultStep = conversationMocks.find(mock => mock.type === 'result');
+          const resultStep = conversationMocks.find(
+            (mock) => mock.type === "result"
+          );
           if (resultStep) {
-            addMessage({ id: Date.now().toString() + '-bot-result', text: resultStep.message, sender: 'bot' });
+            const resultId = `${Date.now().toString()}-bot-result`;
+            addMessage({
+              id: resultId,
+              text: resultStep.message,
+              sender: "bot",
+            });
             set({ currentBotMessage: null });
           }
         }
