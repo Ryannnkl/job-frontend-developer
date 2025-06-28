@@ -18,6 +18,8 @@ export function ChatMessage({ message }: ChatMessageProps) {
         "flex items-end gap-2 p-2",
         isBot ? "justify-start" : "justify-end"
       )}
+      role="article"
+      tabIndex={-1}
     >
       {isBot && (
         <Avatar>

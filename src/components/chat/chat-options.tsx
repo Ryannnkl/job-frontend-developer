@@ -13,6 +13,7 @@ export function ChatOptions({ options, onSelect }: ChatOptionsProps) {
           key={option}
           variant="outline"
           onClick={() => onSelect(option)}
+          aria-label={`Selecionar opção ${option}`}
           className="bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600"
         >
           {option}
