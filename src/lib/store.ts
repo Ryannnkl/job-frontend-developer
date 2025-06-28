@@ -1,6 +1,5 @@
 import { conversationMocks } from "@/lib/mocks";
 import { create } from "zustand";
-
 interface Message {
   id: string;
   text: string;
@@ -20,22 +19,28 @@ interface BotMessageWithId extends Message {
 interface ChatState {
   messages: Message[];
   currentBotMessage: BotMessageWithId | null;
+  isBotTyping: boolean;
   addMessage: (message: Message) => void;
   processUserResponse: (userResponse: string) => void;
   startChat: () => void;
+  setBotTyping: (isTyping: boolean) => void;
 }
 
 export const useChatStore = create<ChatState>((set, get) => ({
   messages: [],
   currentBotMessage: null,
+  isBotTyping: false,
 
   addMessage: (message) => set((state) => ({
     messages: [...state.messages, message],
   })),
 
+  setBotTyping: (isTyping) => set({ isBotTyping: isTyping }),
+
   startChat: () => {
     const firstStep = conversationMocks[0];
     if (firstStep) {
+      get().setBotTyping(true);
       setTimeout(() => {
         get().addMessage({ id: Date.now().toString() + '-bot', text: firstStep.message, sender: 'bot' });
         set({
@@ -49,23 +54,24 @@ export const useChatStore = create<ChatState>((set, get) => ({
             isFollowUp: false,
           },
         });
-      }, 500);
+        get().setBotTyping(false);
+      }, 1500);
     }
   },
 
   processUserResponse: (userResponse) => {
-    const { addMessage, currentBotMessage } = get();
+    const { addMessage, currentBotMessage, setBotTyping } = get();
 
     if (!currentBotMessage) return;
 
     addMessage({ id: Date.now().toString() + '-user', text: userResponse, sender: 'user' });
 
     set((state) => ({
-      currentBotMessage: null, // Remove as opções após a escolha do usuário
+      currentBotMessage: null,
     }));
 
+    setBotTyping(true);
 
-    // Simula tempo de digitação do bot
     setTimeout(() => {
       if (currentBotMessage.followUp && !currentBotMessage.isFollowUp) {
         addMessage({
@@ -108,6 +114,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
           }
         }
       }
-    }, 500); // Tempo de digitação simulado
+      setBotTyping(false);
+    }, 1500);
   },
 }));
