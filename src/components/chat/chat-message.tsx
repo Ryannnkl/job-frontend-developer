@@ -23,8 +23,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
     >
       {isBot && (
         <Avatar>
-          <AvatarImage src="/sofia-avatar.png" alt="Sofia" />{" "}
-          {/* Adicione um avatar para Sofia */}
+          <AvatarImage src="/sofia-avatar.png" alt="Sofia" />
           <AvatarFallback>SF</AvatarFallback>
         </Avatar>
       )}
@@ -40,7 +39,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
       </div>
       {!isBot && (
         <Avatar>
-          <AvatarFallback>VC</AvatarFallback> {/* Avatar para o usuário */}
+          <AvatarFallback>VC</AvatarFallback>
         </Avatar>
       )}
     </div>
