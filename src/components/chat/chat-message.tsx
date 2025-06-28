@@ -18,11 +18,12 @@ export function ChatMessage({ message }: ChatMessageProps) {
         "flex items-end gap-2 p-2",
         isBot ? "justify-start" : "justify-end"
       )}
+      role="article"
+      tabIndex={-1}
     >
       {isBot && (
         <Avatar>
-          <AvatarImage src="/sofia-avatar.png" alt="Sofia" />{" "}
-          {/* Adicione um avatar para Sofia */}
+          <AvatarImage src="/sofia-avatar.png" alt="Sofia" />
           <AvatarFallback>SF</AvatarFallback>
         </Avatar>
       )}
@@ -38,7 +39,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
       </div>
       {!isBot && (
         <Avatar>
-          <AvatarFallback>VC</AvatarFallback> {/* Avatar para o usuário */}
+          <AvatarFallback>VC</AvatarFallback>
         </Avatar>
       )}
     </div>

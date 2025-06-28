@@ -1,13 +1,13 @@
 import { conversationMocks } from "@/lib/mocks";
 import { create } from "zustand";
 
-interface Message {
+export type Message = {
   id: string;
   text: string;
   sender: "user" | "bot";
 }
 
-interface BotMessageWithId extends Message {
+export interface BotMessageWithId extends Message {
   options?: string[];
   followUp?: {
     message: string;
