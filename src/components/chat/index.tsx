@@ -45,7 +45,7 @@ export function Chat() {
     currentBotMessage.options.length > 0;
 
   return (
-    <Card className="w-full max-w-2xl mx-auto h-[80vh] flex flex-col shadow-lg">
+    <Card className="w-full max-w-2xl mx-auto h-screen flex flex-col p-0 gap-0 rounded-none border-none shadow-none md:h-[80vh] md:rounded-xl md:border md:shadow-lg">
       <CardHeader className="border-b p-4">
         <CardTitle>Dolado Chatbot</CardTitle>
       </CardHeader>
