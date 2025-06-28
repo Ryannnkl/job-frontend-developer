@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -6,13 +8,20 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Download, EllipsisVertical } from "lucide-react";
+import { Download, EllipsisVertical, Moon, Sun } from "lucide-react";
+import { useTheme } from "next-themes";
 
 export type ChatHeaderProps = {
   onExport: (format: "json") => void;
 };
 
 export function ChatHeader({ onExport }: ChatHeaderProps) {
+  const { theme, setTheme } = useTheme();
+
+  const handleToggleTheme = () => {
+    setTheme(theme === "light" ? "dark" : "light");
+  };
+
   return (
     <CardHeader className="border-b p-4 flex flex-row items-center justify-between">
       <div className="flex flex-col">
@@ -25,7 +34,7 @@ export function ChatHeader({ onExport }: ChatHeaderProps) {
         <DropdownMenuTrigger asChild>
           <Button variant="outline" size="sm" aria-label="Opções de conversa">
             <EllipsisVertical />
-            <span className="sr-only">Opções de Exportação</span>
+            <span className="sr-only">Opções de conversa</span>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
@@ -35,6 +44,13 @@ export function ChatHeader({ onExport }: ChatHeaderProps) {
           >
             <Download />
             Exportar como JSON
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={handleToggleTheme}
+            aria-label={`Alternar para tema ${theme === "light" ? "escuro" : "claro"}`}
+          >
+            {theme === "light" ? <Moon /> : <Sun />}
+            Alternar para Tema {theme === "light" ? "Escuro" : "Claro"}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
