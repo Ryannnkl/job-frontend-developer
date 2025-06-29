@@ -8,21 +8,20 @@ jest.mock("@/components/ui/scroll-area", () => ({
   ),
 }));
 
-jest.mock("@/components/ui/spinner", () => ({
-  Spinner: ({ variant }: { variant: string }) => (
-    <div data-testid="mock-spinner" data-variant={variant}>
-      Loading...
-    </div>
-  ),
-}));
-
 jest.mock("./chat-message", () => ({
   ChatMessage: jest.fn(({ message }: { message: Message }) => (
     <div data-testid={`chat-message-${message.id}`}>{message.text}</div>
   )),
 }));
 
+jest.mock("./chat-typing-indicator", () => ({
+  ChatTypingIndicator: jest.fn(() => (
+    <div data-testid="mock-typing-indicator"></div>
+  )),
+}));
+
 import { ChatMessage } from "./chat-message";
+import { ChatTypingIndicator } from "./chat-typing-indicator";
 
 describe("ChatMessagesArea", () => {
   const mockMessages: Message[] = [
@@ -60,28 +59,19 @@ describe("ChatMessagesArea", () => {
     expect(ChatMessage).toHaveBeenCalledTimes(mockMessages.length);
   });
 
-  it("should render the Spinner when isBotTyping is true", () => {
+  it("should render the ChatTypingIndicator when isBotTyping is true", () => {
     render(<ChatMessagesArea messages={mockMessages} isBotTyping={true} />);
-    expect(screen.getByTestId("mock-spinner")).toBeInTheDocument();
-    expect(screen.getByTestId("mock-spinner")).toHaveAttribute(
-      "data-variant",
-      "ellipsis"
-    );
+    expect(screen.getByTestId("mock-typing-indicator")).toBeInTheDocument();
+    expect(ChatTypingIndicator).toHaveBeenCalledTimes(1);
   });
 
-  it("should not render the Spinner when isBotTyping is false", () => {
+  it("should not render the ChatTypingIndicator when isBotTyping is false", () => {
     render(<ChatMessagesArea messages={mockMessages} isBotTyping={false} />);
-    expect(screen.queryByTestId("mock-spinner")).not.toBeInTheDocument();
+    expect(
+      screen.queryByTestId("mock-typing-indicator")
+    ).not.toBeInTheDocument();
+    expect(ChatTypingIndicator).not.toHaveBeenCalled();
   });
-
-  it("should render messages and spinner together", () => {
-    render(<ChatMessagesArea messages={mockMessages} isBotTyping={true} />);
-    expect(screen.getByTestId("chat-message-1")).toBeInTheDocument();
-    expect(screen.getByTestId("chat-message-2")).toBeInTheDocument();
-    expect(screen.getByTestId("mock-spinner")).toBeInTheDocument();
-  });
-
-  // --- Testes de Comportamento (Rolagem) ---
 
   it("should scroll to the bottom when messages change", async () => {
     const { rerender } = render(
@@ -103,7 +93,6 @@ describe("ChatMessagesArea", () => {
     ];
     rerender(<ChatMessagesArea messages={newMessages} isBotTyping={false} />);
 
-    // Executa os timers para o useEffect ser disparado pela atualização das props
     act(() => {
       jest.runAllTimers();
     });
@@ -130,7 +119,7 @@ describe("ChatMessagesArea", () => {
     act(() => {
       jest.runAllTimers();
     });
-    expect(scrollIntoViewMock).toHaveBeenCalledTimes(1); // Espera 1 chamada após a mudança de prop
+    expect(scrollIntoViewMock).toHaveBeenCalledTimes(1);
     expect(scrollIntoViewMock).toHaveBeenCalledWith({ behavior: "smooth" });
   });
 
@@ -149,7 +138,6 @@ describe("ChatMessagesArea", () => {
 
     rerender(<ChatMessagesArea messages={mockMessages} isBotTyping={false} />);
 
-    // Executa os timers. Como as props não mudaram, useEffect não deve disparar.
     act(() => {
       jest.runAllTimers();
     });
