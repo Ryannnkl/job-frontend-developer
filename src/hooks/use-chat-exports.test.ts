@@ -3,7 +3,7 @@ import { downloadFile } from "@/lib/utils";
 import { act, renderHook } from "@testing-library/react";
 import { useChatExports } from "./use-chat-exports";
 
-import type { Mock } from 'jest-mock';
+import type { Mock } from "jest-mock";
 
 jest.mock("@/lib/store", () => ({
   useChatStore: jest.fn(),
@@ -27,6 +27,7 @@ describe("useChatExports", () => {
     mockUseChatStore = useChatStore as unknown as Mock;
     mockDownloadFile = downloadFile as Mock;
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     mockUseChatStore.mockImplementation((selector: any) => {
       const mockState = {
         messages: mockMessages,
@@ -52,7 +53,8 @@ describe("useChatExports", () => {
     expect(mockDownloadFile).toHaveBeenCalledTimes(1);
 
     // CORREÇÃO AQUI: Faça um type assertion para string[] ao desestruturar
-    const [jsonContent, mimeType, fileName] = mockDownloadFile.mock.calls[0] as [string, string, string];
+    const [jsonContent, mimeType, fileName] = mockDownloadFile.mock
+      .calls[0] as [string, string, string];
 
     const expectedDataToExport = mockMessages.map((msg) => ({
       id: msg.id,
@@ -63,11 +65,12 @@ describe("useChatExports", () => {
 
     expect(mimeType).toBe("application/json");
 
-    const today = new Date().toISOString().split("T")[0];
+    const [today] = new Date().toISOString().split("T");
     expect(fileName).toMatch(new RegExp(`^conversa_dolado_${today}.json$`));
   });
 
   it("should export an empty array if there are no messages", () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     mockUseChatStore.mockImplementation((selector: any) => {
       const mockState = {
         messages: [],
@@ -83,7 +86,11 @@ describe("useChatExports", () => {
 
     expect(mockDownloadFile).toHaveBeenCalledTimes(1);
     // CORREÇÃO AQUI: Faça um type assertion para string[] ao desestruturar
-    const [jsonContent] = mockDownloadFile.mock.calls[0] as [string, string, string];
+    const [jsonContent] = mockDownloadFile.mock.calls[0] as [
+      string,
+      string,
+      string,
+    ];
     expect(JSON.parse(jsonContent)).toEqual([]);
   });
 });

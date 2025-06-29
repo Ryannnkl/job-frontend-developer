@@ -11,6 +11,7 @@ jest.mock("framer-motion", () => ({
       ...props
     }: {
       children: React.ReactNode;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       [key: string]: any;
     }) => <div {...props}>{children}</div>,
   },

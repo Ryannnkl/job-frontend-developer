@@ -1,5 +1,8 @@
 import { render, screen } from "@testing-library/react";
 import { ChatContainer } from "./chat-container";
+import { ChatFooterProps } from "./chat-footer";
+import { ChatHeaderProps } from "./chat-header";
+import { ChatMessagesAreaProps } from "./chat-message-area";
 
 // Mocks para as dependências
 jest.mock("@/lib/store", () => ({
@@ -19,7 +22,7 @@ jest.mock("@/hooks/use-chat-exports", () => ({
 }));
 
 jest.mock("./chat-header", () => ({
-  ChatHeader: ({ onExport }: any) => (
+  ChatHeader: ({ onExport }: ChatHeaderProps) => (
     <div data-testid="chat-header" onClick={() => onExport("json")}>
       Header
     </div>
@@ -27,7 +30,7 @@ jest.mock("./chat-header", () => ({
 }));
 
 jest.mock("./chat-footer", () => ({
-  ChatFooter: ({ currentBotMessage, onOptionSelect }: any) => (
+  ChatFooter: ({ onOptionSelect }: ChatFooterProps) => (
     <div data-testid="chat-footer" onClick={() => onOptionSelect("option")}>
       Footer
     </div>
@@ -35,7 +38,7 @@ jest.mock("./chat-footer", () => ({
 }));
 
 jest.mock("./chat-message-area", () => ({
-  ChatMessagesArea: ({ messages, isBotTyping }: any) => (
+  ChatMessagesArea: ({}: ChatMessagesAreaProps) => (
     <div data-testid="chat-messages">Messages</div>
   ),
 }));
