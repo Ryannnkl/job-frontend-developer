@@ -1,10 +1,10 @@
 "use client";
 
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Spinner } from "@/components/ui/spinner";
 import type { Message } from "@/lib/store";
 import { useEffect, useRef } from "react";
 import { ChatMessage } from "./chat-message";
+import { ChatTypingIndicator } from "./chat-typing-indicator";
 
 export type ChatMessagesAreaProps = {
   messages: Message[];
@@ -27,7 +27,7 @@ export function ChatMessagesArea({
         {messages.map((msg) => (
           <ChatMessage key={msg.id} message={msg} />
         ))}
-        {isBotTyping && <Spinner variant="ellipsis" />}
+        {isBotTyping && <ChatTypingIndicator />}
         <div ref={messagesEndRef} />
       </div>
     </ScrollArea>
