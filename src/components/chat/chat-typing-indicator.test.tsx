@@ -8,8 +8,9 @@ jest.mock("@/components/ui/avatar", () => ({
   AvatarFallback: ({ children }: { children: React.ReactNode }) => (
     <span data-testid="mock-avatar-fallback">{children}</span>
   ),
-  AvatarImage: (props: any) => (
-    <img data-testid="mock-avatar-image" {...props} />
+  AvatarImage: ({ alt, ...props }: React.ComponentPropsWithoutRef<"img">) => (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img data-testid="mock-avatar-image" alt={alt || ""} {...props} />
   ),
 }));
 
