@@ -15,7 +15,7 @@ const eslintConfig = [
     rules: {
       indent: ["error", 2],
       semi: ["error", "always"],
-      quotes: ["error", "double"],
+      quotes: ["error", "double", { "avoidEscape": true }],
       "prefer-arrow-callback": ["error"],
       "prefer-const": ["error"],
       "prefer-destructuring": ["error"],
