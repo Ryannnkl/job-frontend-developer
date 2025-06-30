@@ -111,3 +111,14 @@ Para executar todos os testes (unitários e E2E) em sequência:
 ```bash
 npm run test:all
 ```
+
+**Estrutura das Branches**
+Este repositório utiliza duas branches principais para organizar o desenvolvimento e o deploy:
+- ``master``: Esta branch serve como a branch de integração e deploy para produção. Ela contém o código que é utilizado pela Vercel para realizar as builds de produção. Geralmente, esta branch recebe apenas commits de merge da branch de desenvolvimento, sem desenvolvimento direto.
+- ``challenge/frontend-ryann``: Esta é a branch de desenvolvimento principal para este desafio. Todos os commits de desenvolvimento e implementações foram realizados nesta branch. Se você deseja acompanhar o histórico de desenvolvimento e os commits individuais sem os merges da master, recomendamos que você alterne para esta branch.
+
+**Para visualizar o histórico de desenvolvimento sem os merges**:
+
+```bash
+git switch challenge/frontend-ryann
+```
